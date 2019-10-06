@@ -1,64 +1,114 @@
-Blockchain
-Blockchain Introduction
-15:04 6 Oct 2019
-Tags: foo, bar, baz
+Blockchain + IOT ?
 
-Name
-joe@example.com
-http://url/
-@twitter_name
+* Contents
 
-* Section 1
+- Consensus Algorithm
+- Blockchain & Bitcoin
+- Blockchain + IOT
 
-* Title of slide
+* Consensus Algorithm
 
-: Presenter notes (first paragraph)
+* 共识算法
 
-Some Text
+集群内的共识算法：我们能控制所有节点
 
-: Presenter notes (subsequent paragraph(s))
+- Raft: kubernetes etcd
+- Zab: zookeeper
+- Paxos
+- ...
 
-* Title of slide or section (must have asterisk)
+* 共识算法
 
-Some Text
+公网的共识算法: 多数节点不被我们控制，要和别人达成共识
 
-- bullets
-- more bullets
-- a bullet with
+- PoW(Proof of Work): Bitcoin blockchain
+- ...
 
-*** Sub-subsection
+* Blockchain & Bitcoin
 
-Some More text
+* Blockchain & Bitcoin
 
-  Preformatted text
-  is indented (however you like)
+第一个区块链: Bitcoin
 
-Further Text, including invocations like:
+先有 *链* 还是先有 *币* ？
 
-# .code x.go /^func main/,/^}/
-# .play y.go
-# .image image.jpg
-# .background image.jpg
-# .iframe http://foo
-# .link http://foo label
-# .html file.html
-# .caption _Gopher_ by [[https://www.instagram.com/reneefrench/][Renée French]]
+- 1. Genesis Block
+- 2. Coin
+- 3. Blockchain
 
-Again, more text
+* Data Verification
 
-* Title of slide or section (must have asterisk) 2
+在分布式的场景下，怎么确保 *数据* 和 *数据的顺序* 是正确的？
 
-- bullets
-- more bullets
-- a bullet with
+.image images/data_structure.png _ 1000
 
-*** Sub-subsection
+需要一种机制来确保。
 
-Some More text
+* Data Verification - Cryptographic Hash
 
-  Preformatted text
-  is indented (however you like)
+对于书本/文件来说：
 
-Further Text, including invocations like:
+- Watermark
+- ...
 
-Again, more text
+Bitcoin: *Double* *SHA-256*
+
+: more details here
+
+- 256 bits representation of data.
+- Long and hard to crack.
+
+- Safe now, but quantum computing may crack it.
+
+* Blockchain: Books of hash
+
+.image images/books_of_hash.png _ 1000
+
+把当前页的 Hash 放到下一页中。
+
+=> 确保了数据饿和数据的顺序的准确。
+
+* Merkle Tree
+
+* Block Structure
+
+* PoW
+
+* Consensus Algorithm Requirements
+
+- Safety
+- Distributed Authority
+- Liveness
+
+* Mining
+
+* Consensus Dynamics
+Sync rule
+Mining rule
+
+* Problems
+
+- 51% Attack
+- Byzantine General's Problem
+
+* Blockchain + IOT
+
+- Trust
+- Traceability
+
+* Appendix
+.link https://zhukeyao.wordpress.com/2016/11/15/understanding-paxosraftzab-algorithm/ Paxos vs Raft vs Zab
+.link https://github.com/Tencent/phxpaxos PhxPaxos
+.link https://5minuteblockchain.com/2019/05/20/blocks-in-bitcoin/ 5 Miniute Blockchain
+
+* Data Verification - Cryptographic Hash
+
+.image images/cryptographic_hash.png _ 1000
+
+双方都知道共同的 hash 算法。
+
+* Bitcoin: Double SHA-256
+
+256 bits representation of data.
+Long and hard to crack.
+Safe now, but quantum computing may crack it.
