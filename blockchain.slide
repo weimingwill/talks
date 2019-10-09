@@ -4,22 +4,23 @@ Blockchain + IOT ?
 
 - Consensus Algorithm
 - Blockchain & Bitcoin
+- Blockchain Consensus Algorithm: PoW
 - Blockchain + IOT
 
 * Consensus Algorithm
 
-* 共识算法
+* Consensus Algorithm
 
-集群内的共识算法：我们能控制所有节点
+In private network (within cluster), we can control all nodes.
 
 - Raft: kubernetes etcd
 - Zab: zookeeper
 - Paxos
 - ...
 
-* 共识算法
+* Consensus Algorithm
 
-公网的共识算法: 多数节点不被我们控制，要和别人达成共识
+In public network, *how*to*reach*consensus*without*control*of*all*identities?*
 
 - PoW(Proof of Work): Bitcoin blockchain
 - ...
@@ -28,9 +29,11 @@ Blockchain + IOT ?
 
 * Blockchain & Bitcoin
 
-第一个区块链: Bitcoin
+1st blockchain: Bitcoin
 
-先有 *链* 还是先有 *币* ？
+Which appeared first: Blockchain or Bitcoin？
+
+* Blockchain & Bitcoin
 
 - 1. Genesis Block
 - 2. Coin
@@ -38,77 +41,221 @@ Blockchain + IOT ?
 
 * Data Verification
 
-在分布式的场景下，怎么确保 *数据* 和 *数据的顺序* 是正确的？
+How to ensure *data* and *order*of*data* is correct in distributed systems?
 
 .image images/data_structure.png _ 1000
 
-需要一种机制来确保。
+* Cryptographic Hashing
 
-* Data Verification - Cryptographic Hash
+.image images/hash_fn.png _ 150
 
-对于书本/文件来说：
+- *Computationally* difficult to find two messages x and x', such that H(x) = H(x')
+- Given a target T, *computationally* difficult to find a message such taht H(x) = T
+- Given a message x, *computationally* difficult to find x ≠ x' such that H(x) = H(x')
 
-- Watermark
-- ...
+Summary:
+
+- Hard to compute
+- Easy to verify
+
+* Cryptographic Hashing
 
 Bitcoin: *Double* *SHA-256*
 
-: more details here
+SHA-256
 
-- 256 bits representation of data.
-- Long and hard to crack.
+- member of the SHA-2 cryptographic hash functions designed by the NSA
+- 256 bits representation of data
+- Long and hard to crack
+- Safe now, but quantum computing may crack it
 
-- Safe now, but quantum computing may crack it.
+Double SHA-256: Hash twice
 
 * Blockchain: Books of hash
 
-.image images/books_of_hash.png _ 1000
+.image images/cryptographic_hashing.png _ 1000
 
-把当前页的 Hash 放到下一页中。
+# .image images/books_of_hash.png _ 1000
 
-=> 确保了数据饿和数据的顺序的准确。
+Put hash of current page in next page
+
+=> ensure accuracy of *data* and *order*of*data*
+
+* Blockchain
+
+.image images/blockchain.png _ 1000
+
+: Blockchain Header + Transactions
+
+* Block Header
+
+.image images/block_header.png _ 500
+
+# .image images/block_structure.png _ 500
+
+- Total: 80 Bytes
+: - Nonce: It is an integer that the miner uses to generate the unique hash of the block.
+: - Bits: the difficulty target for this block
 
 * Merkle Tree
 
-* Block Structure
+.image images/merkle_tree_single.png _ 300
 
-* PoW
+- H01 = Hash (H0 + H1)
+- H0 = Hash (Tx0)
+- H1 = Hash (Tx1)
 
-* Consensus Algorithm Requirements
+* Why Merkle Tree?
 
-- Safety
-- Distributed Authority
-- Liveness
+- Reduce size: full Bitcoin blockchain is close to 200G till 2018 but hashes only takes less than 100MB.
+- Prevent tampering: "chain" the transaction details
+
+* Public & Private Key
+
+- Public Key (Public Address)
+- Private Key
+- Elliptic Curve Digital Signature Algorithm (ECDSA)
+: 椭圆曲线数字签名算法
+
+* Proof of Work
+
+* Bitcoin Consensus Algorithm
+
+Problem
+
+- N nodes, each have an input value.
+- Some nodes are malicious or faulty
+
+Goal
+
+- Safety: Participants agree on the dynamic content of the data
+- Distributed Authority: Not any entity controls the content of the data
+- Liveness: The data can move forward
+
+Challenges
+
+- Latency, lack of global clock
+- No control on identities
+- Arbitrary failures, including deliberate attempts to subvert
+
+* Proof of Work
+
+- Random node in the network gets to choose the next block to be added.
+- Other nodes choose to accept/reject block: based on validity of blocks.
+- Incentives: block reward, transaction fees.
+
+How to decide whether to accept/reject? (Mining)
+
+- Solve hash puzzle: difficult to compute.
+- Easy to verify: other nodes to verify
+
+
+Mechanism
+
+  target = "0000"
+  result = Hash(input + nonce)
+  while result < target {
+    nonce++
+    result = Hash(input + nonce)
+  }
+
+
+* Proof of Work - Example
+
+Simple input: "Hi!"
+
+"Hi!0" => 1312af178c253f84028d480a6adc1e25e81caa44c749ec81976192e2ec934c64
+"Hi!1" => e9afc424b79e4f6ab42d99c81156d3a17228d6e1eef4139be78e948a9332a7d8
+"Hi!2" => ae37343a357a8297591625e7134cbea22f5928be8ca2a32aa475cf05fd4266b7
+ ...
+"Hi!449" => 6e110d98b388e77e9c6f042ac6b497cec46660deef75a55ebc7cfdf65cc0b965
+"Hi!450" => 0000c3af42fc31103f1fdc0151fa747ff87349a4714df7cc52ea464e12dcd4e9
+
+* Proof of Work
+
+Input varies every time.
+
+.image images/merkle_tree.png _ 1000
+
+* Proof of Work - Difficulty
+
+- Adjust difficulty every 2016 blocks
+- Expectation of difficulty: 10 mins => one block
+- If faster than 10 mins one block, increase difficulty
+
+  new_difficulty = old_difficult * (last_2016_blocks_duration / 20160)
+  max_target = 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+  target = max_target / new_difficulty
 
 * Mining
 
-* Consensus Dynamics
-Sync rule
-Mining rule
+Incentives: block reward, transaction fee
+
+.image images/bitcoin_circulation.png _ 600
+
+Reuslt => Add new block
+
+* Mining - Sync Rule
+
+If lagging behind
+
+- Stop current work
+- Download the latest blocks, work on the new problem
+- If always lagging behind => ⬆️ computing power
+
+If two miners solve almost concurrently?
+
+- Keep it until one with heigher height wins.
 
 * Problems
 
-- 51% Attack
+- 51% Attack: power to rewrite record.
 - Byzantine General's Problem
+- Stealing coins: Not without breaking digital signature
+- Denial of service: “Victim” needs to wait for a next honest random node
+
+* Why Blockchain
+
+- Security
+- Transparency
+- Traceability
+
+
+* Blockchain + IOT
 
 * Blockchain + IOT
 
 - Trust
 - Traceability
+- Transparent
+
+* Walmart + IBM Blockchain
+
+Walmart now traces over 25 products from 5 different suppliers.
+e.g. mangoes, chicken, and packaged salads
+
+Why
+
+- Food safety
+- Transparent to consumers
+
+How
+
+- IBM blockchain: Hyperledger
+- Trace them across the chain: IoT devices
+- e.g. For pork in China, it allowed uploading certificates of authenticity to the blockchain/
+
+* Baidu IoT + Blockchain?
+
+.image images/baidu_blockchain.png _ 600
+
+* Baidu IoT + Blockchain Use Case
+
+.image images/baidu_blockchain_use_case.png _ 1000
 
 * Appendix
 .link https://zhukeyao.wordpress.com/2016/11/15/understanding-paxosraftzab-algorithm/ Paxos vs Raft vs Zab
 .link https://github.com/Tencent/phxpaxos PhxPaxos
 .link https://5minuteblockchain.com/2019/05/20/blocks-in-bitcoin/ 5 Miniute Blockchain
-
-* Data Verification - Cryptographic Hash
-
-.image images/cryptographic_hash.png _ 1000
-
-双方都知道共同的 hash 算法。
-
-* Bitcoin: Double SHA-256
-
-256 bits representation of data.
-Long and hard to crack.
-Safe now, but quantum computing may crack it.
+.link https://www.hyperledger.org/resources/publications/walmart-case-study IBM Walmart Case Study
+.link https://cloud.baidu.com/product/bbe.html Baidu Blockchain
