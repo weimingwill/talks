@@ -85,6 +85,8 @@ Put hash of current page in next page
 
 .image images/blockchain.png _ 1000
 
+: cannot prevent, fix error, but can only detect it
+
 : Blockchain Header + Transactions
 
 * Block Header
@@ -110,11 +112,19 @@ Put hash of current page in next page
 - Reduce size: full Bitcoin blockchain is close to 200G till 2018 but hashes only takes less than 100MB.
 - Prevent tampering: "chain" the transaction details
 
+* Transactions
+
+.image images/ledger1.png _ 1000
+
 * Public & Private Key
 
 - Public Key (Public Address)
 - Private Key
 - Elliptic Curve Digital Signature Algorithm (ECDSA)
+
+  signature = Sign(Message, PrivateKey)
+  Verify(Message, signature, PublicKey)
+
 : 椭圆曲线数字签名算法
 
 * Proof of Work
